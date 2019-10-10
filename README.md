@@ -38,7 +38,7 @@ http://jse.amstat.org/v19n3/decock/DataDocumentation.txt
    * Histogram is constructed to check the distribution of the variables involved in the model.The features are not normally distributed.        So now we are going to train our model with chosen variables.
    * Our X valve is our independant variables stored under features and Y value or our target is saleprice.
    * As per industrial norm the train and test data is split into 75:25%
-   ##### LinearRegression()
+   ##### LINEAR REGRESSION
    - We instantiate LinearRegression() model and try to fit our data
    - -6.25795622e+03,  1.01327160e+04,  1.66390418e+02,  1.47098385e+01, 2.08387069e+03,  2.26261696e+04,  6.74568943e+03,                      4.66776870e+01,7.56099128e+03,  9.34829409e+01,  1.15630213e+03,  1.95247028e+02, 2.18187977e+03,  2.40292195e+01,  5.06668414e+01,        1.34361089e+04, 1.21720276e+04,  1.00007937e+04,  1.54543970e+01 are the beta coefficient for our features                                  'full_bath','mas_vnr_type_None','lot_frontage','wood_deck_sf','heating_qc','neighborhood_NridgHt','bsmt_exposure',
      'mas_vnr_area','fireplaces','year_remod/add','garage_finish','year_built',
@@ -115,4 +115,8 @@ http://jse.amstat.org/v19n3/decock/DataDocumentation.txt
 
 # RECOMMENDATION
 We have created a multi linear model for our sales price prediction. We have used Ridge regression with RMSE of 27087.94 which is lower than the linear regression model 27121.80. The features that highly affect the sales price includes mas_vnr_type_None','lot_frontage','wood_deck_sf','screen_porch','heating_qc','neighborhood_NridgHt','bsmt_exposure',
-'mas_vnr_area','fireplaces','year_remod/add','garage_finish','year_built','bsmt_qual','garage_area','gr_liv_area','exter_qual','kitchen_qual','overall_qual','1st_flr_sf + total_bsmt_sf'. Most of them show a positive relationship, when there is a unit increase in independant variable there is a optimal_ridge.coef_ (Value from the following table) times positive increase in the salesprice. While there is a decrease in sales price with increase in full bath. This model works well for sale price until 500000 with Root mean square error of about USD 27087.94 for house at AMES. The predicted saleprice have linear relationship, The Residual histogram follow a normal distribution and the for Residual Vs Test Sale price the values are spread around zero line as per our requirement for linear model, But the plot have one outlier which shows it is only trained until sales of USD 500000.    
+'mas_vnr_area','fireplaces','year_remod/add','garage_finish','year_built','bsmt_qual','garage_area','gr_liv_area','exter_qual','kitchen_qual','overall_qual','1st_flr_sf and total_bsmt_sf'. Most of them show a positive relationship, when there is a unit increase in independant variable there is a optimal_ridge.coef_ (Value from the following table) times positive increase in the salesprice. While there is a decrease in sales price with increase in full bath. 
+
+This model works well for sale price until 500000 with Root mean square error of about USD 27087.94 for house at AMES. The predicted saleprice have linear relationship, The Residual histogram follow a normal distribution and the Residual Vs Test Sale price the values are spread around zero line as per our requirement for linear model, But the plot have one outlier which shows it is only trained until sales of USD 500000. 
+
+The model is quite helpful as most of AMES houses are sold at USD 70000 to USD 350000.
