@@ -1,177 +1,118 @@
-# Project 2 - Ames Housing Data and Kaggle Challenge
+# AMES HOUSE SALEPRICE PREDICTION MACHINE LEARNING MULTI LINEAR                MODEL
 
-Welcome to Project 2! It's time to start modeling.
 
-**Primary Learning Objectives:**
-1. Creating and iteratively refining a regression model
-2. Using [Kaggle](https://www.kaggle.com/) to practice the modeling process
-3. Providing business insights through reporting and presentation.
+## Problem Statement
+Based on the AMES house saleprice datas, We are here to create a model to evaluate the sale price that could be used by general public who are to buy new home at AMES and also by real estate agents who have to sell or buy new house and they can suggest their customer about the saleprice. Questions that arise involving the project includes, What are the independant variables and how much they affect the saleprice.
 
-You are tasked with creating a regression model based on the Ames Housing Dataset. This model will predict the price of a house at sale.
+## Data Dictionery
+Please refer to the following link
+http://jse.amstat.org/v19n3/decock/DataDocumentation.txt
 
-The Ames Housing Dataset is an exceptionally detailed and robust dataset with over 70 columns of different features relating to houses.
 
-Secondly, we are hosting a competition on Kaggle to give you the opportunity to practice the following skills:
+## Data Exploration steps
+   * Changed column name to lower case and inserting _ for space.
+   * Checked for null values and data types of the columns
+   * Changed the data types
+   * Null value at garage area and garage car is replaced into 0 as some home maynot have a car.
+   * Missing value in lot frontage is changed to median as all home will have a lot frontage.
+   * Some home may not have basement, So total basement is changed to 0.
+   * Statistical datas of each colums are investigated
+   * Checked for outliers and data entry errors and corrected the garage_yr_blt from 2207 to 2007
+   * Removed the gr_liv_area above 4000 which is a outlier
+   * Some home may not have mas_vnr_area, so changed it to 0.
+   * Dummie variables created for nominal datas
+   * Ordinal variables are changed with numerical values with map() function
+   * Some of the house doesn't have a garage and so garage year built is changed to 0
+   * Null values at bsmt_full_bath, bsmt_half_bath, bsmt_unf_sf,bsmtfin_sf_1 and bsmtfin_sf_2 without basement is changed to 0
+   * I have checked the independant variables correlated with our target saleprice with .corr() and .sort_values() functions.
+    
+## Model with data
+   * Initially I chose my feature variable to construct the model based on correlation. Considered variables which are correlated + or _        0.35 and later dropped and added one variable at a time and checked the model.
+   * Created new dataframe df_train with the chosen features
+   * The info() about the df_train has mixed datatypes. Except ID and PID all other features are converted into float.
+   * Reindex column with .reindex() function
+   * Heat map is constructed to check correlation visually
+   * gr_liv_area is highly correlated with totrms_abvgrd, fireplace_qu have high correlation with fireplaces. So we can drop fireplaces and      totrms_abvgrd which are less correlated with saleprice compared to fireplace_qu and gr_liv_area. As 1st_flr_sf and total_bsmt_sf are        well correlated a polynomial is created and they are dropped out.
+   * Now our features have less correlation with each other but well correlated with saleprice as per multi linear model requirement.
+   * Scatter plot is made to check the relation of individual feature with sale price.The features are in a linear relationship either          positive or negtive with our target saleprice as per the requirement for multilinear model.
+   * Histogram is constructed to check the distribution of the variables involved in the model.The features are not normally distributed.        So now we are going to train our model with chosen variables.
+   * Our X valve is our independant variables stored under features and Y value or our target is saleprice.
+   * As per industrial norm the train and test data is split into 75:25%
+   ##### LinearRegression()
+   - We instantiate LinearRegression() model and try to fit our data
+   - -6.25795622e+03,  1.01327160e+04,  1.66390418e+02,  1.47098385e+01, 2.08387069e+03,  2.26261696e+04,  6.74568943e+03,                      4.66776870e+01,7.56099128e+03,  9.34829409e+01,  1.15630213e+03,  1.95247028e+02, 2.18187977e+03,  2.40292195e+01,  5.06668414e+01,        1.34361089e+04, 1.21720276e+04,  1.00007937e+04,  1.54543970e+01 are the beta coefficient for our features                                  'full_bath','mas_vnr_type_None','lot_frontage','wood_deck_sf','heating_qc','neighborhood_NridgHt','bsmt_exposure',
+     'mas_vnr_area','fireplaces','year_remod/add','garage_finish','year_built',
+     'bsmt_qual','garage_area','gr_liv_area','exter_qual','kitchen_qual','overall_qual','1st_flr_sf + total_bsmt_sf'
+   - Increase in 1 sq.ft. of area for 1st_flr_sf + total_bsmt_sf increase the sale price by USD 15.45
+   - If the neighbourhood is NridgHt the price increase by USD 22626.16
+   - But with increase in full_bath the price show a decrease by -6257.95. While the scatter plot show a positive linear relationship.
+   - All other variable follows the trend as per our scatter plot between predictors and target.
+   - RMSE is 27121.80
+   ##### STANDARDISATION
+   Standardisation with StandardScaler()
+   ##### RIDGE CROSS VALIDATION  
+   - We got optimal alpha with RidgeCV()
+   - Then used fit() with optimal alpha
+   - prediction done with predict() with optimal alpha
+   - Root mean square error is calculated.
+   - The RMSE for the ridge is 27087.94 which is lower than the linear regression model 27121.80. So, Ridge model is better.
+   ##### LASSO CROSS VALIDATION  
+   - We got optimal alpha with LassoCV()
+   - Then used fit() with optimal alpha
+   - prediction done with predict() with optimal alpha
+   - Root mean square error is calculated.
+   - The RMSE for the lasso is 27140.55 which is higher than the linear regression model 27121.80 and also the RMSE for the ridge which          is 27587.94.
+  ##### ELASTIC NET VALIDATION  
+   - We got optimal alpha with ElasticNetCV()
+   - Then used fit() with optimal alpha
+   - prediction done with predict() with optimal alpha
+   - Root mean square error is calculated.
+   - The RMSE for the elastic net is 27140.55 which is similar to lasso.
+     
+#### Repeated   LinearRegression(), Standardisation,  RiddgeCV(), Lasso() and  ElasticNetCV(), fit and predict for following trials
+     
+    
+# Features and Kaggle Score:
+## Trial 1
+   FEATURES USED:
+    'lot_frontage','wood_deck_sf','screen_porch','mas_vnr_type_None','heating_qc','neighborhood_NridgHt','bsmt_exposure',
+    'mas_vnr_area','foundation_PConc','full_bath','fireplace_qu','year_remod/add','garage_finish','year_built',
+    'bsmt_qual','garage_area','gr_liv_area','exter_qual','kitchen_qual','overall_qual','1st_flr_sf + total_bsmt_sf'
+    
+   Kaggle RMSE: 33211.91569  
+    
+## Trial 2
+   FEATURES USED:
+    'lot_frontage','wood_deck_sf','screen_porch','mas_vnr_type_None','heating_qc','neighborhood_NridgHt','bsmt_exposure',
+    'mas_vnr_area','foundation_PConc','full_bath','fireplaces','year_remod/add','garage_finish','year_built',
+    'bsmt_qual','garage_area','gr_liv_area','exter_qual','kitchen_qual','overall_qual','1st_flr_sf + total_bsmt_sf'
+    
+   Kaggle RMSE: 33211.91569  
+    
+## Trial 3
+   FEATURES USED:
+    'mas_vnr_type_None','lot_frontage','wood_deck_sf','screen_porch','heating_qc','neighborhood_NridgHt','bsmt_exposure',
+    'mas_vnr_area','foundation_PConc','fireplaces','year_remod/add','garage_finish','year_built',
+    'bsmt_qual','garage_area','gr_liv_area','exter_qual','kitchen_qual','overall_qual','1st_flr_sf + total_bsmt_sf'
+    
+   Kaggle RMSE: 33052.04527
+    
+## Trial 4
+   FEATURES USED:
+    'mas_vnr_type_None','lot_frontage','wood_deck_sf','screen_porch','heating_qc','neighborhood_NridgHt','bsmt_exposure',
+    'mas_vnr_area','foundation_PConc','fireplaces','year_remod/add','garage_finish','year_built',
+    'bsmt_qual','garage_area','gr_liv_area','exter_qual','kitchen_qual','overall_qual','1st_flr_sf + total_bsmt_sf'
+    
+   Kaggle RMSE:  32190.60509    
+    
+## Trial 5 and Finalised one
+   FEATURES USED:
+    'mas_vnr_type_None','lot_frontage','wood_deck_sf','screen_porch','heating_qc','neighborhood_NridgHt','bsmt_exposure',
+    'mas_vnr_area','fireplaces','year_remod/add','garage_finish','year_built',
+    'bsmt_qual','garage_area','gr_liv_area','exter_qual','kitchen_qual','overall_qual','1st_flr_sf + total_bsmt_sf'
+    
+   Kaggle RMSE:  32152.31164
 
-- Refining models over time
-- Use of train-test split, cross-validation, and data with unknown values for the target to simulate the modeling process
-- The use of Kaggle as a place to practice data science
-
-As always, you will be submitting a technical report and a presentation. **You may find that the best model for Kaggle is not the best model to address your data science problem.**
-
-## Set-up
-
-Before you begin working on this project, please do the following:
-
-1. Sign up for an account on [Kaggle](https://www.kaggle.com/)
-2. **IMPORTANT**: Click this link ([Regression Challenge Sign Up](https://www.kaggle.com/t/cf68f4a276f44b59a3c6c843dbf9ed1e)) to **join** the competition (otherwise you will not be able to make submissions!)
-3. Review the material on the [DSI-US-6 Regression Challenge](https://www.kaggle.com/c/dsi-us-6-project-2-regression-challenge)
-4. Review the [data description](http://jse.amstat.org/v19n3/decock/DataDocumentation.txt).
-
-## The Modeling Process
-
-1. The train dataset has all of the columns that you will need to generate and refine your models. The test dataset has all of those columns except for the target that you are trying to predict in your Regression model.
-2. Generate your regression model using the training data. We expect that within this process, you'll be making use of:
-    - train-test split
-    - cross-validation / grid searching for hyperparameters
-    - strong exploratory data analysis to question correlation and relationship across predictive variables
-    - code that reproducibly and consistently applies feature transformation (such as the preprocessing library)
-3. Predict the values for your target column in the test dataset and submit your predictions to Kaggle to see how your model does against unknown data.
-    - **Note**: Kaggle expects to see your submissions in a specific format. Check the challenge's page to make sure you are formatting your CSVs correctly!
-    - **You are limited to models you've learned in class**. In other words, you cannot use XGBoost, Neural Networks or any other advanced model for this project.
-4. Evaluate your models!
-    - consider your evaluation metrics
-    - consider your baseline score
-    - how can your model be used for inference?
-    - why do you believe your model will generalize to new data?
-
-## Submission
-
-**Materials must be submitted by the beginning of class on Oct 11.**
-
-Your technical report will be hosted on Github Enterprise. Make sure it includes:
-
-- A README.md (that isn't this file)
-- Jupyter notebook(s) with your analysis and models (renamed to describe your project)
-- At least one successful prediction submission on [DSI-US-6 Regression Challenge](https://www.kaggle.com/c/dsi-us-6-project-2-regression-challenge) --  you should see your name in the "[Leaderboard](https://www.kaggle.com/c/dsi-us-6-project-2-regression-challenge/leaderboard)" tab.
-- Data files
-- Presentation slides
-- Any other necessary files (images, etc.)
-
-**Check with your local instructor for how they would like you to submit your repo for review.**
-
----
-
-## Presentation Structure
-
-- **Must be within time limit established by local instructor.**
-- Use Google Slides or some other visual aid (Keynote, Powerpoint, etc).
-- Consider the audience. **Check with your local instructor for direction**.
-- Start with the **data science problem**.
-- Use visuals that are appropriately scaled and interpretable.
-- Talk about your procedure/methodology (high level).
-- Talk about your primary findings.
-- Make sure you provide **clear recommendations** that follow logically from your analyses and narrative and answer your data science problem.
-
-Be sure to rehearse and time your presentation before class.
-
----
-
-## Rubric
-Your local instructor will evaluate your project (for the most part) using the following criteria.  You should make sure that you consider and/or follow most if not all of the considerations/recommendations outlined below **while** working through your project.
-
-**Scores will be out of 27 points based on the 9 items in the rubric.** <br>
-*3 points per section*<br>
-
-| Score | Interpretation |
-| --- | --- |
-| **0** | *Project fails to meet the minimum requirements for this item.* |
-| **1** | *Project meets the minimum requirements for this item, but falls significantly short of portfolio-ready expectations.* |
-| **2** | *Project exceeds the minimum requirements for this item, but falls short of portfolio-ready expectations.* |
-| **3** | *Project meets or exceeds portfolio-ready expectations; demonstrates a thorough understanding of every outlined consideration.* |
-
-### The Data Science Process
-
-**Problem Statement**
-- Is it clear what the student plans to do?
-- What type of model will be developed?
-- How will success be evaluated?
-- Is the scope of the project appropriate?
-- Is it clear who cares about this or why this is important to investigate?
-- Does the student consider the audience and the primary and secondary stakeholders?
-
-**Data Cleaning and EDA**
-- Are missing values imputed appropriately?
-- Are distributions examined and described?
-- Are outliers identified and addressed?
-- Are appropriate summary statistics provided?
-- Are steps taken during data cleaning and EDA framed appropriately?
-- Does the student address whether or not they are likely to be able to answer their problem statement with the provided data given what they've discovered during EDA?
-
-**Preprocessing and Modeling**
-- Are categorical variables one-hot encoded?
-- Does the student investigate or manufacture features with linear relationships to the target?
-- Have the data been scaled appropriately?
-- Does the student properly split and/or sample the data for validation/training purposes?
-- Does the student utilize feature selection to remove noisy or multi-collinear features?
-- Does the student test and evaluate a variety of models to identify a production algorithm (**AT MINIMUM:** linear regression, lasso, and ridge)?
-- Does the student defend their choice of production model relevant to the data at hand and the problem?
-- Does the student explain how the model works and evaluate its performance successes/downfalls?
-
-**Evaluation and Conceptual Understanding**
-- Does the student accurately identify and explain the baseline score?
-- Does the student select and use metrics relevant to the problem objective?
-- Is more than one metric utilized in order to better assess performance?
-- Does the student interpret the results of their model for purposes of inference?
-- Is domain knowledge demonstrated when interpreting results?
-- Does the student provide appropriate interpretation with regards to descriptive and inferential statistics?
-
-**Conclusion and Recommendations**
-- Does the student provide appropriate context to connect individual steps back to the overall project?
-- Is it clear how the final recommendations were reached?
-- Are the conclusions/recommendations clearly stated?
-- Does the conclusion answer the original problem statement?
-- Does the student address how findings of this research can be applied for the benefit of stakeholders?
-- Are future steps to move the project forward identified?
-
-### Organization and Professionalism
-
-**Project Organization**
-- Are modules imported correctly (using appropriate aliases)?
-- Are data imported/saved using relative paths?
-- Does the README provide a good executive summary of the project?
-- Is markdown formatting used appropriately to structure notebooks?
-- Are there an appropriate amount of comments to support the code?
-- Are files & directories organized correctly?
-- Are there unnecessary files included?
-- Do files and directories have well-structured, appropriate, consistent names?
-
-**Visualizations**
-- Are sufficient visualizations provided?
-- Do plots accurately demonstrate valid relationships?
-- Are plots labeled properly?
-- Are plots interpreted appropriately?
-- Are plots formatted and scaled appropriately for inclusion in a notebook-based technical report?
-
-**Python Syntax and Control Flow**
-- Is care taken to write human readable code?
-- Is the code syntactically correct (no runtime errors)?
-- Does the code generate desired results (logically correct)?
-- Does the code follows general best practices and style guidelines?
-- Are Pandas functions used appropriately?
-- Are `sklearn` methods used appropriately?
-
-**Presentation**
-- Is the problem statement clearly presented?
-- Does a strong narrative run through the presentation building toward a final conclusion?
-- Are the conclusions/recommendations clearly stated?
-- Is the level of technicality appropriate for the intended audience?
-- Is the student substantially over or under time?
-- Does the student appropriately pace their presentation?
-- Does the student deliver their message with clarity and volume?
-- Are appropriate visualizations generated for the intended audience?
-- Are visualizations necessary and useful for supporting conclusions/explaining findings?
-
-### REMEMBER:
-
-This is a learning environment and you are encouraged to try new things, even if they end up failing. While this rubric outlines what we look for in a _good_ project, it is up to you to go above and beyond to create a _great_ project. **Learn from your failures and you'll be prepared to succeed in the workforce**.
+# RECOMMENDATION
+We have created a multi linear model for our sales price prediction. We have used Ridge regression with RMSE of 27087.94 which is lower than the linear regression model 27121.80. The features that highly affect the sales price includes mas_vnr_type_None','lot_frontage','wood_deck_sf','screen_porch','heating_qc','neighborhood_NridgHt','bsmt_exposure',
+'mas_vnr_area','fireplaces','year_remod/add','garage_finish','year_built','bsmt_qual','garage_area','gr_liv_area','exter_qual','kitchen_qual','overall_qual','1st_flr_sf + total_bsmt_sf'. Most of them show a positive relationship, when there is a unit increase in independant variable there is a optimal_ridge.coef_ (Value from the following table) times positive increase in the salesprice. While there is a decrease in sales price with increase in full bath. This model works well for sale price until 500000 with Root mean square error of about USD 27087.94 for house at AMES. The predicted saleprice have linear relationship, The Residual histogram follow a normal distribution and the for Residual Vs Test Sale price the values are spread around zero line as per our requirement for linear model, But the plot have one outlier which shows it is only trained until sales of USD 500000.    
