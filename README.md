@@ -1,11 +1,11 @@
 # AMES HOUSE SALEPRICE PREDICTION MACHINE LEARNING MULTI LINEAR                MODEL
 
 
-## Problem Statement
+## PROBLEM STATEMENT
 
 Based on the AMES housing sales price data, we have to create a multi linear regression model to predict the sales price. The prediction can help the general public and real estate agents, who are looking to buy or sell houses. This model will help the customer in predicting the saleprice. The model is evaluated using RMSE, Kaggle RMSE and Adjusted R squared.
 
-## Data Dictionery
+## DATA DICTIONERY
 
 Please refer to the following link
 http://jse.amstat.org/v19n3/decock/DataDocumentation.txt
@@ -50,8 +50,8 @@ http://jse.amstat.org/v19n3/decock/DataDocumentation.txt
      - We could find some of the variables are highly correlated from the heatmap.
       The correlated variables are as follows.
         1.garage_cars and garage_area                                                                                                   
-        2.fireplaces and fireplace_qu 
-        3.overall_qual, Exter_qual and Kitchen_qual
+        2.fireplaces aoverall_qualnd fireplace_qu 
+        3.Exter_qual and Kitchen_qual
         4.gr_liv_area and totrms_abvgrd
         5.1st_flr_sf and total_bsmt_sf
         6.ms_subclass_90 and bldg_type_duplex
@@ -184,4 +184,4 @@ http://jse.amstat.org/v19n3/decock/DataDocumentation.txt
 
   This model works well for sale price until 500000 with Root mean square error of about USD 25499.7 for house at AMES. The predicted         saleprice have linear relationship, The Residual histogram follow a normal distribution and the Residual Vs Test Sale price the values     are spread around zero line and it is homoskedastic as per our requirement for linear model, But the plot have one outlier which shows     it is only trained until sales of USD 500000. 
 
-   The model is quite helpful as most of AMES houses are sold at range of USD 70000 to USD 350000.
+  The model is quite helpful as most of AMES houses are sold at range of USD 70000 to USD 350000.
